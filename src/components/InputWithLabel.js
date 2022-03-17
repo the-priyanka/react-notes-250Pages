@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import styles from "../App.module.css";
+import { StyledLabel, StyledInput } from "../App";
 
 const InputWithLabel = (props) => {
   const inputRef = useRef();
@@ -12,12 +13,9 @@ const InputWithLabel = (props) => {
 
   return (
     <>
-      <label htmlFor={props.id} className={styles.label}>
-        {props.children}
-      </label>
+      <StyledLabel htmlFor={props.id}>{props.children}</StyledLabel>
       &nbsp;
-      <input
-        className={styles.input}
+      <StyledInput
         id={props.id}
         ref={props.inputRef}
         type={props.type}
