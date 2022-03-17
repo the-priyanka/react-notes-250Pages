@@ -1,3 +1,5 @@
+import React from "react";
+import axios from "axios";
 import { useCallback, useEffect, useReducer, useState } from "react";
 import InputWithLabel from "./components/InputWithLabel";
 import List from "./components/List";
@@ -20,21 +22,17 @@ const App = () => {
     isError: false,
   });
 
-  const handleFetchStories = useCallback(() => {
-    if (!searchTerm) return;
+  const handleFetchStories = useCallback(async () => {
     dispatchStories({ type: "STORIES_FETCH_INIT" });
-
-    fetch(url)
-      .then((response) => response.json())
-      .then((result) => {
-        dispatchStories({
-          type: "STORIES_FETCH_SUCCESS",
-          payload: result.hits,
-        });
-      })
-      .catch(() =>
-        dispatchStories({ type: "STORIES_FETCH_FAILURE" })
-      );
+    try {
+      const result = await axios.get(url);
+      dispatchStories({
+        type: "STORIES_FETCH_SUCCESS",
+        payload: result.data.hits,
+      });
+    } catch {
+      dispatchStories({ type: "STORIES_FETCH_FAILURE" });
+    }
   }, [url]);
 
   useEffect(() => {
