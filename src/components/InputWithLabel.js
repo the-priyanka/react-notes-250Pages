@@ -21,6 +21,7 @@ const InputWithLabel = ({
       <label htmlFor={id}>{children}</label>
       &nbsp;
       <input
+        className="search-form"
         id={id}
         ref={inputRef}
         type={type}

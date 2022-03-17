@@ -1,5 +1,11 @@
+body {
+  background-color: #010a1d;
+  color: white;
+}
+
 .App {
   text-align: center;
+
   justify-content: center;
 }
 
@@ -27,6 +33,52 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.Item-li {
+  margin: 13px 0;
+}
+
+.Item-li span a {
+  color: #07ff6f;
+}
+
+.form-submit {
+  margin-left: 12px;
+  height: 38px;
+  width: 93px;
+  background: #07ff6f;
+  color: black;
+  border: 2px solid black;
+  border-radius: 4px;
+  padding: 3px 1px;
+  cursor: pointer;
+  font-size: 19px;
+}
+
+.search-form {
+  width: 270px;
+  height: 28px;
+  background: none;
+  border: 2px solid white;
+  color: white;
+  padding: 0px 9px;
+  font-size: 23px;
+}
+
+.strong {
+  font-size: 26px;
+  margin-right: 12px;
+}
+
+.Item-li span button {
+  font-size: 16px;
+  margin-left: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid #010a1d;
+  color: #010a1d;
+  background-color: #07ff6f;
 }
 
 @keyframes App-logo-spin {

@@ -1,5 +1,5 @@
 const Item = ({ item, onRemoveItem }) => (
-  <li>
+  <li className="Item-li">
     <span>
       <a href={item.url}>{item.title}</a>
     </span>

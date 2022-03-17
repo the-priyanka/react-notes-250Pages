@@ -1,7 +1,7 @@
 import Item from "./Item";
 
 const List = ({ list, onRemoveItem }) => (
-  <ul>
+  <ol>
     {list.map((item) => (
       <Item
         key={item.objectID}
@@ -9,7 +9,7 @@ const List = ({ list, onRemoveItem }) => (
         onRemoveItem={onRemoveItem}
       />
     ))}
-  </ul>
+  </ol>
 );
 
 export default List;
