@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import styles from "../App.module.css";
 
 const InputWithLabel = (props) => {
   const inputRef = useRef();
@@ -11,12 +12,12 @@ const InputWithLabel = (props) => {
 
   return (
     <>
-      <label htmlFor={props.id} className="label">
+      <label htmlFor={props.id} className={styles.label}>
         {props.children}
       </label>
       &nbsp;
       <input
-        className="input"
+        className={styles.input}
         id={props.id}
         ref={props.inputRef}
         type={props.type}
