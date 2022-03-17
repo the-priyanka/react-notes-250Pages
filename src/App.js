@@ -2,7 +2,6 @@ import React from "react";
 import axios from "axios";
 import "./App.css";
 import { useCallback, useEffect, useReducer, useState } from "react";
-import InputWithLabel from "./components/InputWithLabel";
 import List from "./components/List";
 import storiesReducer from "./components/storiesReducer";
 import useSemiPersistentState from "./components/useSemiPersistentState";
@@ -57,8 +56,8 @@ const App = () => {
     e.preventDefault();
   };
   return (
-    <div>
-      <h1>My Hacker Stories</h1>
+    <div className="container">
+      <h1 className="headline-primary">My Hacker Stories</h1>
       <SearchForm
         searchTerm={searchTerm}
         onSearchInput={handleSearchInput}

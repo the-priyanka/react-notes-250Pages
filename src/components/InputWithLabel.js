@@ -1,32 +1,27 @@
 import { useEffect, useRef } from "react";
 
-const InputWithLabel = ({
-  id,
-  value,
-  type = "text",
-  onInputChange,
-  isFocused,
-  children,
-}) => {
+const InputWithLabel = (props) => {
   const inputRef = useRef();
 
   useEffect(() => {
-    if (isFocused && inputRef.current) {
+    if (props.isFocused && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isFocused]);
+  }, [props.isFocused]);
 
   return (
     <>
-      <label htmlFor={id}>{children}</label>
+      <label htmlFor={props.id} className="label">
+        {props.children}
+      </label>
       &nbsp;
       <input
-        className="search-form"
-        id={id}
-        ref={inputRef}
-        type={type}
-        value={value}
-        onChange={onInputChange}
+        className="input"
+        id={props.id}
+        ref={props.inputRef}
+        type={props.type}
+        value={props.value}
+        onChange={props.onInputChange}
       />
     </>
   );
