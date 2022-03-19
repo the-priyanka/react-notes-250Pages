@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import styles from "../App.module.css";
 import { StyledLabel, StyledInput } from "../App";
 
 const InputWithLabel = (props) => {

@@ -1,4 +1,6 @@
 import { StyledItem, StyledColumn, StyledButtonSmall } from "../App";
+import { ImCheckmark2 } from "react-icons/im";
+
 const Item = ({ item, onRemoveItem }) => (
   <StyledItem>
     <StyledColumn width="40%">
@@ -12,7 +14,7 @@ const Item = ({ item, onRemoveItem }) => (
         type="button"
         onClick={() => onRemoveItem(item)}
       >
-        Dismiss
+        <ImCheckmark2 src height="18px" width="18px" />
       </StyledButtonSmall>
     </StyledColumn>
   </StyledItem>

@@ -140,5 +140,4 @@ export const StyledInput = styled.input`
   background-color: transparent;
   font-size: 24px;
 `;
-
 export default App;
