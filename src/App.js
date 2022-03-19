@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import axios from "axios";
 
 import { useCallback, useEffect, useReducer, useState } from "react";
@@ -8,6 +8,7 @@ import useSemiPersistentState from "./components/useSemiPersistentState";
 import SearchForm from "./components/SearchForm";
 
 import styled from "styled-components";
+import getSumComments from "./components/getSumComments";
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
 const App = () => {
@@ -40,12 +41,12 @@ const App = () => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleRemoveStory = (item) => {
+  const handleRemoveStory = useCallback((item) => {
     dispatchStories({
       type: "REMOVE_STORY",
       payload: item,
     });
-  };
+  }, []);
 
   const handleSearchInput = (e) => {
     setSearchTerm(e.target.value);
@@ -55,9 +56,27 @@ const App = () => {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
     e.preventDefault();
   };
+
+  const getSumComments = (stories) => {
+    console.log("C");
+    return stories.data.reduce(
+      (result, value) => result + value.num_comments,
+      0
+    );
+  };
+
+  const sumComments = useMemo(
+    () => getSumComments(stories),
+    [stories]
+  );
+
+  console.log("B:App");
+
   return (
     <StyledContainer>
-      <StyledHeadlinePrimary>My Hacker Stories</StyledHeadlinePrimary>
+      <StyledHeadlinePrimary>
+        My Hacker Stories with {sumComments} comments.
+      </StyledHeadlinePrimary>
       <SearchForm
         searchTerm={searchTerm}
         onSearchInput={handleSearchInput}

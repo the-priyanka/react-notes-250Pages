@@ -9,7 +9,7 @@ const useSemiPersistentState = (key, initialState) => {
 
   useEffect(() => {
     if (!isMounted.current) {
-      console.log(!isMounted.current);
+      isMounted.current = true;
     } else {
       localStorage.setItem(key, value);
     }
