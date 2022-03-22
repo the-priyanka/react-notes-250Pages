@@ -1,5 +1,5 @@
-import { StyledItem, span, StyledButtonSmall } from "../App";
-import { ImCheckmark2 } from "react-icons/im";
+// import { StyledItem, span, StyledButtonSmall } from "../App";
+// import { ImCheckmark2 } from "react-icons/im";
 
 const Item = (props) => (
   <li style={{ display: "flex" }}>

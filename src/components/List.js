@@ -11,14 +11,20 @@ const SORTS = {
 };
 
 const List = (props) => {
-  const [sort, setSort] = useState("NONE");
+  const [sort, setSort] = useState({
+    sortKey: "NONE",
+    isReverse: false,
+  });
 
   const handleSort = (sortKey) => {
-    setSort(sortKey);
+    const isReverse = sort.sortKey === sortKey && !sort.isReverse;
+    setSort({ sortKey, isReverse });
   };
 
-  const sortFunction = SORTS[sort];
-  const sortedList = sortFunction(props.list);
+  const sortFunction = SORTS[sort.sortKey];
+  const sortedList = sort.isReverse
+    ? sortFunction(props.list).reverse()
+    : sortFunction(props.list);
 
   return (
     <ul>
