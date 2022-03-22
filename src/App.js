@@ -2,13 +2,14 @@ import React, { useMemo } from "react";
 import axios from "axios";
 
 import { useCallback, useEffect, useReducer, useState } from "react";
+
 import List from "./components/List";
 import storiesReducer from "./components/storiesReducer";
 import useSemiPersistentState from "./components/useSemiPersistentState";
 import SearchForm from "./components/SearchForm";
-
 import styled from "styled-components";
-import getSumComments from "./components/getSumComments";
+import Item from "./components/Item";
+import InputWithLabel from "./components/InputWithLabel";
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
 const App = () => {
@@ -160,3 +161,5 @@ export const StyledInput = styled.input`
   font-size: 24px;
 `;
 export default App;
+
+export { Item, List, SearchForm, storiesReducer, InputWithLabel };

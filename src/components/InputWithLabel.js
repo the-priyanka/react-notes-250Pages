@@ -3,7 +3,7 @@ import { StyledLabel, StyledInput } from "../App";
 
 const InputWithLabel = (props) => {
   const inputRef = useRef();
-
+ 
   useEffect(() => {
     if (props.isFocused && inputRef.current) {
       inputRef.current.focus();

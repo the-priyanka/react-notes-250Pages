@@ -1,23 +1,23 @@
-import { StyledItem, StyledColumn, StyledButtonSmall } from "../App";
+import { StyledItem, span, StyledButtonSmall } from "../App";
 import { ImCheckmark2 } from "react-icons/im";
 
 const Item = (props) => (
-  <StyledItem>
-    <StyledColumn width="40%">
+  <li style={{ display: "flex" }}>
+    <span style={{ width: "40%" }}>
       <a href={props.item.url}>{props.item.title}</a>
-    </StyledColumn>
-    <StyledColumn width="30%">{props.item.author}</StyledColumn>
-    <StyledColumn width="10%">{props.item.num_comments}</StyledColumn>
-    <StyledColumn width="10%">{props.item.points} </StyledColumn>
-    <StyledColumn width="10%">
-      <StyledButtonSmall
+    </span>
+    <span style={{ width: "30%" }}>{props.item.author}</span>
+    <span style={{ width: "10%" }}>{props.item.num_comments}</span>
+    <span style={{ width: "10%" }}>{props.item.points} </span>
+    <span style={{ width: "10%" }}>
+      <button
         type="button"
         onClick={() => props.onRemoveItem(props.item)}
       >
-        <ImCheckmark2 height="18px" width="18px" />
-      </StyledButtonSmall>
-    </StyledColumn>
-  </StyledItem>
+        Dismiss
+      </button>
+    </span>
+  </li>
 );
 
 export default Item;
