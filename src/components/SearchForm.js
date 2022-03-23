@@ -1,10 +1,9 @@
 import React from "react";
-import { StyledSearchForm, StyledButtonLarge } from "../App";
 import InputWithLabel from "./InputWithLabel";
 
 const SearchForm = (props) => {
   return (
-    <StyledSearchForm onSubmit={props.onSearchSubmit}>
+    <form onSubmit={props.onSearchSubmit}>
       <InputWithLabel
         id="search"
         value={props.searchTerm}
@@ -14,10 +13,10 @@ const SearchForm = (props) => {
         <strong>Search:</strong>
       </InputWithLabel>
 
-      <StyledButtonLarge type="submit" disabled={!props.searchTerm}>
+      <button type="submit" disabled={!props.searchTerm}>
         Submit
-      </StyledButtonLarge>
-    </StyledSearchForm>
+      </button>
+    </form>
   );
 };
 

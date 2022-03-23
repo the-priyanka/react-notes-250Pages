@@ -1,9 +1,8 @@
 import { useEffect, useRef } from "react";
-import { StyledLabel, StyledInput } from "../App";
 
 const InputWithLabel = (props) => {
   const inputRef = useRef();
- 
+
   useEffect(() => {
     if (props.isFocused && inputRef.current) {
       inputRef.current.focus();
@@ -12,9 +11,9 @@ const InputWithLabel = (props) => {
 
   return (
     <>
-      <StyledLabel htmlFor={props.id}>{props.children}</StyledLabel>
+      <label htmlFor={props.id}>{props.children}</label>
       &nbsp;
-      <StyledInput
+      <input
         id={props.id}
         ref={props.inputRef}
         type={props.type}

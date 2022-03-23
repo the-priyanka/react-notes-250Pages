@@ -1,21 +1,27 @@
-import React, { useMemo } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 
 import List from "./components/List";
 import storiesReducer from "./components/storiesReducer";
 import useSemiPersistentState from "./components/useSemiPersistentState";
 import SearchForm from "./components/SearchForm";
-import styled from "styled-components";
-import Item from "./components/Item";
-import InputWithLabel from "./components/InputWithLabel";
 import LastSearches from "./components/LastSearches";
-const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
-const getUrl = (searchTerm) => `${API_ENDPOINT}${searchTerm}`;
+const API_BASE = "https://hn.algolia.com/api/v1";
+const API_SEARCH = "/search";
+const PARAM_SEARCH = "query=";
+const PARAM_PAGE = "page=";
 
-const extractSearchTerm = (url) => url.replace(API_ENDPOINT, "");
+const getUrl = (searchTerm, page) =>
+  `${API_BASE}${API_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}`;
+
+const extractSearchTerm = (url) =>
+  url
+    .substring(url.lastIndexOf("?") + 1, url.lastIndexOf("&"))
+    .replace(PARAM_SEARCH, "");
+
 const getLastSearches = (urls) =>
   urls
     .reduce((result, url, index) => {
@@ -39,15 +45,14 @@ const App = () => {
     "search",
     "React"
   );
-  const [urls, setUrls] = React.useState([getUrl(searchTerm)]);
+  const [urls, setUrls] = useState([getUrl(searchTerm, 0)]);
 
   const [stories, dispatchStories] = useReducer(storiesReducer, {
     data: [],
+    page: 0,
     isLoading: false,
     isError: false,
   });
-
-  const lastSearches = getLastSearches(urls);
 
   const handleFetchStories = useCallback(async () => {
     dispatchStories({ type: "STORIES_FETCH_INIT" });
@@ -56,7 +61,10 @@ const App = () => {
       const result = await axios.get(lastUrl);
       dispatchStories({
         type: "STORIES_FETCH_SUCCESS",
-        payload: result.data.hits,
+        payload: {
+          list: result.data.hits,
+          page: result.data.page,
+        },
       });
     } catch {
       dispatchStories({ type: "STORIES_FETCH_FAILURE" });
@@ -67,46 +75,39 @@ const App = () => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleRemoveStory = useCallback((item) => {
+  const handleRemoveStory = (item) => {
     dispatchStories({
       type: "REMOVE_STORY",
       payload: item,
     });
-  }, []);
+  };
 
   const handleSearchInput = (e) => {
     setSearchTerm(e.target.value);
   };
 
   const handleSearchSubmit = (e) => {
-    handleSearch(searchTerm);
+    handleSearch(searchTerm, 0);
     e.preventDefault();
   };
 
   const handleLastSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
-    handleSearch(searchTerm);
+    handleSearch(searchTerm, 0);
   };
 
-  const handleSearch = (searchTerm) => {
-    const url = getUrl(searchTerm);
+  const handleMore = () => {
+    const lastUrl = urls[urls.length - 1];
+    const searchTerm = extractSearchTerm(lastUrl);
+    handleSearch(searchTerm, stories.page + 1);
+  };
+
+  const handleSearch = (searchTerm, page) => {
+    const url = getUrl(searchTerm, page);
     setUrls(urls.concat(url));
   };
 
-  const getSumComments = (stories) => {
-    console.log("C");
-    return stories.data.reduce(
-      (result, value) => result + value.num_comments,
-      0
-    );
-  };
-
-  const sumComments = useMemo(
-    () => getSumComments(stories),
-    [stories]
-  );
-
-  console.log("B:App");
+  const lastSearches = getLastSearches(urls);
 
   return (
     <div>
@@ -122,92 +123,87 @@ const App = () => {
         onLastSearch={handleLastSearch}
       />
 
-      {lastSearches.map((searchTeam, index) => (
-        <button
-          key={searchTeam + index}
-          type="button"
-          onClick={() => handleLastSearch(searchTeam)}
-        >
-          {searchTeam}
-        </button>
-      ))}
+      <hr />
 
       {stories.isError && <h2>Something went wrong ....</h2>}
+
+      <List list={stories.data} onRemoveItem={handleRemoveStory} />
 
       {stories.isLoading ? (
         <h2>Loading....</h2>
       ) : (
-        <List list={stories.data} onRemoveItem={handleRemoveStory} />
+        <button type="button" onClick={handleMore}>
+          More
+        </button>
       )}
     </div>
   );
 };
+// const StyledContainer = styled.div`
+//   height: 100vw;
+//   padding: 20px;
+//   background: #83a4d4;
+//   background: linear-gradient(to left, #b6fbff, #83a4d4);
+//   color: #171212;
+// `;
+// const StyledHeadlinePrimary = styled.h1`
+//   font-size: 48px;
+//   font-weight: 300;
+//   letter-spacing: 2px;
+// `;
 
-const StyledContainer = styled.div`
-  height: 100vw;
-  padding: 20px;
-  background: #83a4d4;
-  background: linear-gradient(to left, #b6fbff, #83a4d4);
-  color: #171212;
-`;
-const StyledHeadlinePrimary = styled.h1`
-  font-size: 48px;
-  font-weight: 300;
-  letter-spacing: 2px;
-`;
+// export const StyledItem = styled.li`
+//   display: flex;
+//   align-items: center;
+//   padding-bottom: 5px;
+// `;
+// export const StyledColumn = styled.span`
+//   padding: 0 5px;
+//   white-space: nowrap;
+//   overflow: hidden;
+//   white-space: nowrap;
+//   text-overflow: ellipsis;
+//   a {
+//     color: inherit;
+//   }
+//   width: ${(props) => props.width};
+// `;
 
-export const StyledItem = styled.li`
-  display: flex;
-  align-items: center;
-  padding-bottom: 5px;
-`;
-export const StyledColumn = styled.span`
-  padding: 0 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  a {
-    color: inherit;
-  }
-  width: ${(props) => props.width};
-`;
+// export const StyledButton = styled.button`
+//   background: transparent;
+//   border: 1px solid #171212;
+//   padding: 5px;
+//   cursor: pointer;
+//   transition: all 0.1s ease-in;
+//   &:hover {
+//     background: #171212;
+//     color: #ffffff;
+//   }
+// `;
+// export const StyledButtonSmall = styled(StyledButton)`
+//   padding: 5px;
+// `;
+// export const StyledButtonLarge = styled(StyledButton)`
+//   padding: 10px;
+// `;
+// export const StyledSearchForm = styled.form`
+//   padding: 10px 0 20px 0;
+//   display: flex;
+//   align-items: baseline;
+// `;
 
-export const StyledButton = styled.button`
-  background: transparent;
-  border: 1px solid #171212;
-  padding: 5px;
-  cursor: pointer;
-  transition: all 0.1s ease-in;
-  &:hover {
-    background: #171212;
-    color: #ffffff;
-  }
-`;
-export const StyledButtonSmall = styled(StyledButton)`
-  padding: 5px;
-`;
-export const StyledButtonLarge = styled(StyledButton)`
-  padding: 10px;
-`;
-export const StyledSearchForm = styled.form`
-  padding: 10px 0 20px 0;
-  display: flex;
-  align-items: baseline;
-`;
-
-export const StyledLabel = styled.label`
-  border-top: 1px solid #171212;
-  border-left: 1px solid #171212;
-  padding-left: 5px;
-  font-size: 24px;
-`;
-export const StyledInput = styled.input`
-  border: none;
-  border-bottom: 1px solid #171212;
-  background-color: transparent;
-  font-size: 24px;
-`;
+// export const StyledLabel = styled.label`
+//   border-top: 1px solid #171212;
+//   border-left: 1px solid #171212;
+//   padding-left: 5px;
+//   font-size: 24px;
+// `;
+// export const StyledInput = styled.input`
+//   border: none;
+//   border-bottom: 1px solid #171212;
+//   background-color: transparent;
+//   font-size: 24px;
+// `;
 export default App;
 
-export { Item, List, SearchForm, storiesReducer, InputWithLabel };
+// export { Item, List, SearchForm, storiesReducer, InputWithLabel };
